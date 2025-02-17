@@ -744,22 +744,16 @@ Suggests:       python-gnupg
 # python-xml is part of python-base in all rhel versions
 %if 0%{?singlespec_compat}
 Requires:       %{python_module xml}
+Requires:       %{python_module zypp-plugin}
 Suggests:       %{python_module Mako}
 Recommends:     %{python_module netaddr}
 Recommends:     %{python_module pyinotify}
 %else
 Requires:       python-xml
+Requires:       python-zypp-plugin
 Suggests:       python-Mako
 Recommends:     python-netaddr
 Recommends:     python-pyinotify
-%endif
-%endif
-
-%if 0%{?suse_version}
-%if 0%{?sle_version} >= 150400
-Requires:       %{python_module zypp-plugin if %python-salt}
-%else
-Requires:       python3-zypp-plugin
 %endif
 Requires(pre):  libzypp(plugin:system) >= 0
 %endif
@@ -1608,13 +1602,13 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %dir               %attr(0750, root, root) %{_sysconfdir}/salt/minion.d/
 %dir               %attr(0750, root, root) %{_sysconfdir}/salt/pki/minion/
 %dir               %attr(0750, root, root) %{_localstatedir}/cache/salt/minion/
+%if %{with systemd}
+%{_sbindir}/rcsalt-minion
+%endif
+
 # Install plugin only on SUSE machines
 %if 0%{?suse_version}
 %{_prefix}/lib/zypp/plugins/commit/zyppnotify
-%endif
-
-%if %{with systemd}
-%{_sbindir}/rcsalt-minion
 %endif
 
 %if %{with systemd}
