@@ -1611,6 +1611,15 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %{_prefix}/lib/zypp/plugins/commit/zyppnotify
 %endif
 
+# Install DNF plugin only on RH machines
+%if 0%{?fedora} || 0%{?rhel}
+%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
+%{python3_sitelib}/dnf-plugins/dnfnotify.py
+%{python3_sitelib}/dnf-plugins/__pycache__/dnfnotify.*
+%{_sysconfdir}/dnf/plugins/dnfnotify.conf
+%endif
+%endif
+
 %if %{with systemd}
 %{_unitdir}/salt-minion.service
 %endif
@@ -1707,18 +1716,6 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %python_alternative %{_exec_prefix}/libexec/salt/salt-ssh
 %python_alternative %{_exec_prefix}/libexec/salt/salt-syndic
 %python_alternative %{_exec_prefix}/libexec/salt/zyppnotify
-%endif
-
-# Install Yum plugins only on RH machines
-%if 0%{?fedora} || 0%{?rhel}
-%if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
-%{python3_sitelib}/dnf-plugins/dnfnotify.py
-%{python3_sitelib}/dnf-plugins/__pycache__/dnfnotify.*
-%{_sysconfdir}/dnf/plugins/dnfnotify.conf
-%else
-%{_prefix}/share/yum-plugins/yumnotify.*
-%{_sysconfdir}/yum/pluginconf.d/yumnotify.conf
-%endif
 %endif
 
 %dir %{python_sitelib}/salt
