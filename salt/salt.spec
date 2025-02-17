@@ -755,6 +755,15 @@ Recommends:     python-pyinotify
 %endif
 %endif
 
+%if 0%{?suse_version}
+%if 0%{?sle_version} >= 150400
+Requires:       %{python_module zypp-plugin if %python-salt}
+%else
+Requires:       python3-zypp-plugin
+%endif
+Requires(pre):  libzypp(plugin:system) >= 0
+%endif
+
 # Required by Salt modules
 Requires:       iputils
 Requires:       sudo
@@ -865,14 +874,6 @@ Group:          System/Management
 Requires:       %{name} = %{version}-%{release}
 %if 0%{?suse_version} > 1500 || 0%{?sle_version} > 150000
 Requires:       (%{name}-transactional-update = %{version}-%{release} if read-only-root-fs)
-%endif
-%if 0%{?suse_version}
-%if 0%{?sle_version} >= 150400
-Requires:       %{python_module zypp-plugin if %python-salt}
-%else
-Requires:       python3-zypp-plugin
-%endif
-Requires(pre):  libzypp(plugin:system) >= 0
 %endif
 
 %if %{with systemd}
@@ -1607,6 +1608,11 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %dir               %attr(0750, root, root) %{_sysconfdir}/salt/minion.d/
 %dir               %attr(0750, root, root) %{_sysconfdir}/salt/pki/minion/
 %dir               %attr(0750, root, root) %{_localstatedir}/cache/salt/minion/
+# Install plugin only on SUSE machines
+%if 0%{?suse_version}
+%{_prefix}/lib/zypp/plugins/commit/zyppnotify
+%endif
+
 %if %{with systemd}
 %{_sbindir}/rcsalt-minion
 %endif
@@ -1707,11 +1713,6 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %python_alternative %{_exec_prefix}/libexec/salt/salt-ssh
 %python_alternative %{_exec_prefix}/libexec/salt/salt-syndic
 %python_alternative %{_exec_prefix}/libexec/salt/zyppnotify
-%endif
-
-# Install plugin only on SUSE machines
-%if 0%{?suse_version}
-%{_prefix}/lib/zypp/plugins/commit/zyppnotify
 %endif
 
 # Install Yum plugins only on RH machines
