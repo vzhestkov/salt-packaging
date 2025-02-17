@@ -867,7 +867,11 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       (%{name}-transactional-update = %{version}-%{release} if read-only-root-fs)
 %endif
 %if 0%{?suse_version}
+%if 0%{?sle_version} >= 150400
+Requires:       %{python_module zypp-plugin if %python-salt}
+%else
 Requires:       python3-zypp-plugin
+%endif
 Requires(pre):  libzypp(plugin:system) >= 0
 %endif
 
