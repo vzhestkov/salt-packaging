@@ -1175,11 +1175,7 @@ cp -a conf %{buildroot}%{$python_sitelib}/salt-testsuite/
 %if 0%{?suse_version}
 install -Dd -m 0750 %{buildroot}%{_prefix}/lib/zypp/plugins/commit
 %{__install} scripts/suse/zypper/plugins/commit/zyppnotify %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
-%if 0%{?sle_version} >= 150400
-%{python_expand #
-%python3_fix_shebang_path %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
-}
-%else
+%if 0%{?singlespec_compat}
 sed -i '1s=^#!/usr/bin/\(python\|env python\)[0-9.]*=#!/usr/bin/python3=' %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
 %endif
 %endif
