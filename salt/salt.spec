@@ -674,8 +674,9 @@ Requires:       python3-msgpack > 0.3
 Requires:       python3-zmq >= 2.2.0
 Requires:       yum
 
-%if 0%{?rhel} == 8 || 0%{?fedora} >= 30
+%if 0%{?rhel} >= 8 || 0%{?fedora} >= 30
 Requires:       dnf
+Requires:       python3-dnf-plugins-core
 %endif
 %if 0%{?rhel} == 6
 Requires:       yum-plugin-security
