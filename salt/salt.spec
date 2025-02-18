@@ -1175,9 +1175,6 @@ cp -a conf %{buildroot}%{$python_sitelib}/salt-testsuite/
 %if 0%{?suse_version}
 install -Dd -m 0750 %{buildroot}%{_prefix}/lib/zypp/plugins/commit
 %{__install} scripts/suse/zypper/plugins/commit/zyppnotify %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
-%if 0%{?singlespec_compat}
-sed -i '1s=^#!/usr/bin/\(python\|env python\)[0-9.]*=#!/usr/bin/python3=' %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
-%endif
 %endif
 
 # Install Yum plugins only on RH machines
@@ -1609,12 +1606,10 @@ rm -f %{_localstatedir}/cache/salt/minion/thin/version
 %endif
 
 # Install DNF plugin only on RH machines
-%if 0%{?fedora} || 0%{?rhel}
 %if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 %{python3_sitelib}/dnf-plugins/dnfnotify.py
 %{python3_sitelib}/dnf-plugins/__pycache__/dnfnotify.*
 %{_sysconfdir}/dnf/plugins/dnfnotify.conf
-%endif
 %endif
 
 %if %{with systemd}
