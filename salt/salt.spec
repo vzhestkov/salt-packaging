@@ -34,7 +34,7 @@
 %define psuffix %{nil}
 %endif
 
-%if 0%{?suse_version} > 1210 || 0%{?rhel} >= 7 || 0%{?fedora} >=28
+%if 0%{?suse_version} > 1210 || 0%{?rhel} >= 7 || 0%{?fedora} >= 28
 %bcond_without systemd
 %else
 %bcond_with    systemd
@@ -574,10 +574,6 @@ BuildRequires:  bash
 BuildRequires:  zsh
 %endif
 
-%if 0%{?rhel} || 0%{?fedora}
-BuildRequires:  yum
-%endif
-
 %define python_subpackage_only 1
 %python_subpackages
 
@@ -672,14 +668,10 @@ Requires:       python3-m2crypto
 Requires:       python3-markupsafe
 Requires:       python3-msgpack > 0.3
 Requires:       python3-zmq >= 2.2.0
-Requires:       yum
 
 %if 0%{?rhel} >= 8 || 0%{?fedora} >= 30
 Requires:       dnf
 Requires:       python3-dnf-plugins-core
-%endif
-%if 0%{?rhel} == 6
-Requires:       yum-plugin-security
 %endif
 %else # SUSE
 %if 0%{?singlespec_compat}
@@ -1177,8 +1169,7 @@ install -Dd -m 0750 %{buildroot}%{_prefix}/lib/zypp/plugins/commit
 %{__install} scripts/suse/zypper/plugins/commit/zyppnotify %{buildroot}%{_prefix}/lib/zypp/plugins/commit/zyppnotify
 %endif
 
-# Install Yum plugins only on RH machines
-%if 0%{?fedora} || 0%{?rhel}
+# Install DNF plugin only on RH machines
 %if 0%{?fedora} >= 22 || 0%{?rhel} >= 8
 install -Dd %{buildroot}%{python3_sitelib}/dnf-plugins
 install -Dd %{buildroot}%{python3_sitelib}/dnf-plugins/__pycache__
@@ -1187,14 +1178,6 @@ install -Dd %{buildroot}%{_sysconfdir}/dnf/plugins
 %{__install} scripts/suse/dnf/plugins/dnfnotify.conf %{buildroot}%{_sysconfdir}/dnf/plugins
 %{__python3} -m compileall -d %{python3_sitelib}/dnf-plugins %{buildroot}%{python3_sitelib}/dnf-plugins/dnfnotify.py
 %{__python3} -O -m compileall -d %{python3_sitelib}/dnf-plugins %{buildroot}%{python3_sitelib}/dnf-plugins/dnfnotify.py
-%else
-install -Dd %{buildroot}%{_prefix}/share/yum-plugins
-install -Dd %{buildroot}%{_sysconfdir}/yum/pluginconf.d
-%{__install} scripts/suse/yum/plugins/yumnotify.py %{buildroot}%{_prefix}/share/yum-plugins
-%{__install} scripts/suse/yum/plugins/yumnotify.conf %{buildroot}%{_sysconfdir}/yum/pluginconf.d
-%{__python} -m compileall -d %{_prefix}/share/yum-plugins %{buildroot}%{_prefix}/share/yum-plugins/yumnotify.py
-%{__python} -O -m compileall -d %{_prefix}/share/yum-plugins %{buildroot}%{_prefix}/share/yum-plugins/yumnotify.py
-%endif
 %endif
 
 ## install init and systemd scripts
